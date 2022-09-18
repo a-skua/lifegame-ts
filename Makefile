@@ -1,8 +1,8 @@
-build:
-	npm run build
+fmt:
+	deno fmt
 
 test:
-	npm test
+	deno test
 
 run:
-	node dist/bundle.js
+	deno run bin/cli.ts

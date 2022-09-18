@@ -24,14 +24,14 @@ const newTileSrc = (x: X, y: Y, seed: State[]): State[] => {
 
 type NewPosition = (x: X, y: Y) => Position;
 
-const up          = (x: X, y: Y): Position => [x, y - 1];
-const upperRight  = (x: X, y: Y): Position => [x + 1, y - 1];
-const right       = (x: X, y: Y): Position => [x + 1, y];
+const up = (x: X, y: Y): Position => [x, y - 1];
+const upperRight = (x: X, y: Y): Position => [x + 1, y - 1];
+const right = (x: X, y: Y): Position => [x + 1, y];
 const bottomRight = (x: X, y: Y): Position => [x + 1, y + 1];
-const bottom      = (x: X, y: Y): Position => [x, y + 1];
-const bottomLeft  = (x: X, y: Y): Position => [x - 1, y + 1];
-const left        = (x: X, y: Y): Position => [x - 1, y];
-const upperLeft   = (x: X, y: Y): Position => [x - 1, y - 1];
+const bottom = (x: X, y: Y): Position => [x, y + 1];
+const bottomLeft = (x: X, y: Y): Position => [x - 1, y + 1];
+const left = (x: X, y: Y): Position => [x - 1, y];
+const upperLeft = (x: X, y: Y): Position => [x - 1, y - 1];
 
 const newPositions: readonly NewPosition[] = [
   up,
@@ -46,7 +46,7 @@ const newPositions: readonly NewPosition[] = [
 
 const toNum = (state: State | null): number => {
   return (state ?? false) ? 1 : 0;
-}
+};
 
 export class Tile {
   private src: readonly State[];
@@ -60,21 +60,21 @@ export class Tile {
   }
 
   public static fromTable(table: Table): Tile {
-    let seed: State[] = []
-    table.forEach(row => row.forEach(col => seed.push(col)));
+    const seed: State[] = [];
+    table.forEach((row) => row.forEach((col) => seed.push(col)));
     return new Tile(table[0]?.length ?? 0, table.length, seed);
   }
 
- public toTable(): Table {
-    let table: Table = [];
-    for(let y = 0; y < this.y; y++) {
-      let row: State[] = [];
-      for(let x = 0; x < this.x; x++) {
+  public toTable(): Table {
+    const table: Table = [];
+    for (let y = 0; y < this.y; y++) {
+      const row: State[] = [];
+      for (let x = 0; x < this.x; x++) {
         row.push(this.src[this.xy2i(x, y)]);
       }
       table.push(row);
     }
-   return table;
+    return table;
   }
 
   public state(x: X, y: Y): State | null {
@@ -85,7 +85,7 @@ export class Tile {
     return this.src[this.xy2i(x, y)];
   }
 
-  private xy2i (x: X, y: Y): Index {
+  private xy2i(x: X, y: Y): Index {
     return x + this.x * y;
   }
 
@@ -95,7 +95,10 @@ export class Tile {
       return null;
     }
 
-    const count: number = newPositions.reduce((count: number, f: NewPosition) => count + toNum(this.state(...f(x, y))), 0);
+    const count: number = newPositions.reduce(
+      (count: number, f: NewPosition) => count + toNum(this.state(...f(x, y))),
+      0,
+    );
 
     if (current) {
       return count === 2 || count === 3;
