@@ -101,8 +101,6 @@ var LifeGame = class {
 };
 
 // web.ts
-console.log(window.innerHeight);
-console.log(window.innerWidth);
 var seed = (() => {
   const src = `
 ......................................
