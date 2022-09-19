@@ -1,6 +1,6 @@
 import { LifeGame, Table } from "../src/lifegame.ts";
 
-const seed: readonly Table = (() => {
+const seed: Table = (() => {
   const src = `
 ......................................
 .........................#............
@@ -43,6 +43,6 @@ const lifegame = LifeGame.fromTable(seed);
 const show = (): void => {
   lifegame.next(48, 32);
   lifegame.rendering(render);
-  setTimeout(show, 100);
+  setTimeout(show, 50);
 };
-setTimeout(show, 100);
+show();

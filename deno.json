@@ -1,4 +1,7 @@
 {
+  "compilerOptions": {
+    "lib": ["dom", "deno.ns"]
+  },
   "lint": {
     "files": {
       "include": ["src/", "bin/"]
