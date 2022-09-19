@@ -3,9 +3,6 @@
  */
 import { LifeGame, Table, X, Y } from "../src/lifegame.ts";
 
-console.log(window.innerHeight);
-console.log(window.innerWidth);
-
 const seed: Table = (() => {
   const src = `
 ......................................
