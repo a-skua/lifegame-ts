@@ -10,7 +10,7 @@ export type Position = [X, Y];
 
 export type Table = State[][];
 
-const newTileSrc = (x: X, y: Y, seed: State[]): State[] => {
+const newCellSrc = (x: X, y: Y, seed: State[]): State[] => {
   const src: boolean[] = [];
   for (let i = 0; i < x * y; i++) {
     if (i < seed.length) {
@@ -48,7 +48,7 @@ const toNum = (state: State | null): number => {
   return (state ?? false) ? 1 : 0;
 };
 
-export class Tile {
+export class Cell {
   private src: readonly State[];
 
   constructor(
@@ -56,13 +56,13 @@ export class Tile {
     public readonly y: Y,
     seed: State[] = [],
   ) {
-    this.src = newTileSrc(this.x, this.y, seed);
+    this.src = newCellSrc(this.x, this.y, seed);
   }
 
-  public static fromTable(table: Table): Tile {
+  public static fromTable(table: Table): Cell {
     const seed: State[] = [];
     table.forEach((row) => row.forEach((col) => seed.push(col)));
-    return new Tile(table[0]?.length ?? 0, table.length, seed);
+    return new Cell(table[0]?.length ?? 0, table.length, seed);
   }
 
   public toTable(): Table {
@@ -112,26 +112,26 @@ export type Render = (t: Table) => void;
 
 export class LifeGame {
   constructor(
-    private tile: Tile,
+    private cell: Cell,
   ) {}
 
   public static fromTable(seed: Table): LifeGame {
-    return new LifeGame(Tile.fromTable(seed));
+    return new LifeGame(Cell.fromTable(seed));
   }
 
-  public next(x: X = this.tile.x, y: Y = this.tile.y): void {
+  public next(x: X = this.cell.x, y: Y = this.cell.y): void {
     const seed: State[] = [];
     for (let cy = 0; cy < y; cy++) {
       for (let cx = 0; cx < x; cx++) {
-        const state = this.tile.future(cx, cy);
+        const state = this.cell.future(cx, cy);
         seed.push(state ?? false);
       }
     }
 
-    this.tile = new Tile(x, y, seed);
+    this.cell = new Cell(x, y, seed);
   }
 
   public rendering(render: Render): void {
-    render(this.tile.toTable());
+    render(this.cell.toTable());
   }
 }

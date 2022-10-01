@@ -1,5 +1,5 @@
 // ../src/lifegame.ts
-var newTileSrc = (x, y, seed2) => {
+var newCellSrc = (x, y, seed2) => {
   const src = [];
   for (let i = 0; i < x * y; i++) {
     if (i < seed2.length) {
@@ -31,16 +31,16 @@ var newPositions = [
 var toNum = (state) => {
   return state ?? false ? 1 : 0;
 };
-var Tile = class {
+var Cell = class {
   constructor(x, y, seed2 = []) {
     this.x = x;
     this.y = y;
-    this.src = newTileSrc(this.x, this.y, seed2);
+    this.src = newCellSrc(this.x, this.y, seed2);
   }
   static fromTable(table) {
     const seed2 = [];
     table.forEach((row) => row.forEach((col) => seed2.push(col)));
-    return new Tile(table[0]?.length ?? 0, table.length, seed2);
+    return new Cell(table[0]?.length ?? 0, table.length, seed2);
   }
   toTable() {
     const table = [];
@@ -79,24 +79,24 @@ var Tile = class {
   }
 };
 var LifeGame = class {
-  constructor(tile) {
-    this.tile = tile;
+  constructor(cell) {
+    this.cell = cell;
   }
   static fromTable(seed2) {
-    return new LifeGame(Tile.fromTable(seed2));
+    return new LifeGame(Cell.fromTable(seed2));
   }
-  next(x = this.tile.x, y = this.tile.y) {
+  next(x = this.cell.x, y = this.cell.y) {
     const seed2 = [];
     for (let cy = 0; cy < y; cy++) {
       for (let cx = 0; cx < x; cx++) {
-        const state = this.tile.future(cx, cy);
+        const state = this.cell.future(cx, cy);
         seed2.push(state ?? false);
       }
     }
-    this.tile = new Tile(x, y, seed2);
+    this.cell = new Cell(x, y, seed2);
   }
   rendering(render2) {
-    render2(this.tile.toTable());
+    render2(this.cell.toTable());
   }
 };
 

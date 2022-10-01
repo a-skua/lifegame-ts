@@ -1,5 +1,5 @@
 import { assertEquals } from "https://deno.land/std@0.156.0/testing/asserts.ts";
-import { LifeGame, Tile } from "./lifegame.ts";
+import { Cell, LifeGame } from "./lifegame.ts";
 
 Deno.test("tile state: ok", () => {
   /**
@@ -9,7 +9,7 @@ Deno.test("tile state: ok", () => {
    *  2 | F   F   F
    */
   assertEquals(
-    new Tile(3, 3, [
+    new Cell(3, 3, [
       true,
       false,
       false,
@@ -30,7 +30,7 @@ Deno.test("tile state: ok", () => {
    *  2 | F   F   F
    */
   assertEquals(
-    new Tile(3, 3, [
+    new Cell(3, 3, [
       false,
       false,
       false,
@@ -51,7 +51,7 @@ Deno.test("tile state: ok", () => {
    *  2 | F   F   T
    */
   assertEquals(
-    new Tile(3, 3, [
+    new Cell(3, 3, [
       false,
       false,
       false,
@@ -72,7 +72,7 @@ Deno.test("tile state: ok", () => {
    *  2 | T   F   F
    */
   assertEquals(
-    new Tile(3, 3, [
+    new Cell(3, 3, [
       false,
       false,
       false,
@@ -93,7 +93,7 @@ Deno.test("tile state: ok", () => {
    *  2 | F   F   F
    */
   assertEquals(
-    new Tile(3, 3, [
+    new Cell(3, 3, [
       false,
       false,
       true,
@@ -117,7 +117,7 @@ Deno.test("tile state: ng", () => {
    *  2 |     F   F   F
    *  3 |
    */
-  assertEquals(new Tile(3, 3).state(-1, -1), null);
+  assertEquals(new Cell(3, 3).state(-1, -1), null);
 
   /**
    * Y\X|-1_|_0_|_1_|_2_|_3_
@@ -127,7 +127,7 @@ Deno.test("tile state: ng", () => {
    *  2 |     F   F   F
    *  3 |
    */
-  assertEquals(new Tile(3, 3).state(3, -1), null);
+  assertEquals(new Cell(3, 3).state(3, -1), null);
 
   /**
    * Y\X|-1_|_0_|_1_|_2_|_3_
@@ -137,7 +137,7 @@ Deno.test("tile state: ng", () => {
    *  2 |     F   F   F
    *  3 | P
    */
-  assertEquals(new Tile(3, 3).state(-1, 3), null);
+  assertEquals(new Cell(3, 3).state(-1, 3), null);
 
   /**
    * Y\X|-1_|_0_|_1_|_2_|_3_
@@ -147,7 +147,7 @@ Deno.test("tile state: ng", () => {
    *  2 |     F   F   F
    *  3 |                 P
    */
-  assertEquals(new Tile(3, 3).state(3, 3), null);
+  assertEquals(new Cell(3, 3).state(3, 3), null);
 });
 
 Deno.test("tile future: new life", () => {
@@ -158,7 +158,7 @@ Deno.test("tile future: new life", () => {
    *  2 | F   F   F
    */
   assertEquals(
-    new Tile(3, 3, [
+    new Cell(3, 3, [
       true,
       true,
       false,
@@ -179,7 +179,7 @@ Deno.test("tile future: new life", () => {
    *  2 | F   F   F
    */
   assertEquals(
-    new Tile(3, 3, [
+    new Cell(3, 3, [
       false,
       true,
       true,
@@ -200,7 +200,7 @@ Deno.test("tile future: new life", () => {
    *  2 | F   T   T
    */
   assertEquals(
-    new Tile(3, 3, [
+    new Cell(3, 3, [
       false,
       false,
       false,
@@ -221,7 +221,7 @@ Deno.test("tile future: new life", () => {
    *  2 | T   T   F
    */
   assertEquals(
-    new Tile(3, 3, [
+    new Cell(3, 3, [
       false,
       false,
       false,
@@ -245,7 +245,7 @@ Deno.test("tile future: keep life", () => {
    *  3 | F   F   F   F
    */
   assertEquals(
-    new Tile(4, 4, [
+    new Cell(4, 4, [
       false,
       false,
       false,
@@ -274,7 +274,7 @@ Deno.test("tile future: keep life", () => {
    *  3 | F   F   F   F
    */
   assertEquals(
-    new Tile(4, 4, [
+    new Cell(4, 4, [
       false,
       false,
       false,
@@ -303,7 +303,7 @@ Deno.test("tile future: keep life", () => {
    *  3 | F   F   F   F
    */
   assertEquals(
-    new Tile(4, 4, [
+    new Cell(4, 4, [
       false,
       false,
       false,
@@ -332,7 +332,7 @@ Deno.test("tile future: keep life", () => {
    *  3 | F   F   F   F
    */
   assertEquals(
-    new Tile(4, 4, [
+    new Cell(4, 4, [
       false,
       false,
       false,
@@ -362,7 +362,7 @@ Deno.test("tile future: death", () => {
    *  2 | F   F   F
    */
   assertEquals(
-    new Tile(3, 3, [
+    new Cell(3, 3, [
       false,
       false,
       false,
@@ -383,7 +383,7 @@ Deno.test("tile future: death", () => {
    *  2 | F   F   F
    */
   assertEquals(
-    new Tile(3, 3, [
+    new Cell(3, 3, [
       false,
       false,
       false,
@@ -404,7 +404,7 @@ Deno.test("tile future: death", () => {
    *  2 | F   F   F
    */
   assertEquals(
-    new Tile(3, 3, [
+    new Cell(3, 3, [
       false,
       false,
       false,
@@ -421,12 +421,12 @@ Deno.test("tile future: death", () => {
 
 Deno.test("new tile from table", () => {
   assertEquals(
-    Tile.fromTable([
+    Cell.fromTable([
       [true, false, false],
       [false, true, false],
       [false, false, true],
     ]),
-    new Tile(3, 3, [
+    new Cell(3, 3, [
       true,
       false,
       false,
@@ -440,9 +440,16 @@ Deno.test("new tile from table", () => {
   );
 });
 
+Deno.test("new tile from empty table", () => {
+  assertEquals(
+    Cell.fromTable([]),
+    new Cell(0, 0, []),
+  );
+});
+
 Deno.test("tile to table", () => {
   assertEquals(
-    new Tile(3, 3, [
+    new Cell(3, 3, [
       false,
       false,
       true,
